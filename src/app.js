@@ -13,7 +13,7 @@ const ServiceRegistryClient = require('./utils/serviceRegistry')
 const mongoUrl = config.MONGODB_URI
 const connection = mongoose.connection
 mongoose.set('strictQuery', false)
-mongoose.connect(mongoUrl, { useNewurlParser: true })
+mongoose.connect(mongoUrl)
   .then(() => {
     console.log('connected to MongoDB')
   })
