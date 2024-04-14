@@ -1,68 +1,57 @@
 const cartService = require('../services/cartService');
 const productService = require('../services/productService');
+const { CustomError } = require('../utils/error');
 
-async function handleAddToCart(req, res) {
+async function handleAddToCart(req, res, next) {
     try {
         const { userId, productId } = req.body;
         const productDetails = await productService.fetchProductDetails(productId);
 
         if (!productDetails) {
-            return res.status(404).json({ message: 'Product not found' });
+            throw new CustomError('Product not found', 404, false)
         }
 
         const updatedCart = await cartService.addToCart(userId, productDetails);
         res.json(updatedCart);
     } catch (error) {
-        res.status(500).json({ message: 'Error adding to cart', error: error.message });
+        next(error);
     }
 }
 
-async function handleUpdateCart(req, res) {
-    const { userId, productId, quantity } = req.body;
+async function handleUpdateCart(req, res, next) {
+    const { userId, productId, quantity, decrement } = req.body;
 
     if (quantity < 1) {
-        return res.status(400).send('Quantity must be at least 1.');
+        throw new CustomError('Quantity must be atleast 1', 400, false);
     }
 
     try {
-        const cart = await cartService.updateCartItem(userId, productId, quantity);
+        const cart = await cartService.updateCartItem(userId, productId, quantity, decrement);
         res.send(cart);
     } catch (error) {
-        if (error.message === 'Cart not found' || error.message === 'Item not found in cart') {
-            res.status(404).send(error.message);
-        } else {
-            res.status(500).send(error.message);
-        }
+       next(error);
     }
 }
 
-async function handleRemoveCartItem(req, res) {
+async function handleRemoveCartItem(req, res, next) {
     const { userId, productId } = req.body;
 
     try {
         const cart = await cartService.removeCartItem(userId, productId);
         res.send(cart);
     } catch (error) {
-        if (error.message === 'Cart not found') {
-            res.status(404).send(error.message);
-        } else {
-            res.status(500).send(error.message);
-        }
+        next(error);
     }
 }
 
-async function handleGetCart(req, res) {
+async function handleGetCart(req, res, next) {
     const { userId } = req.query;
 
     try {
         const cart = await cartService.getCart(userId);
         res.send(cart);
     } catch (error) {
-        if (error.message === 'Cart not found') {
-            res.status(404).send(error.message);
-        } else {
-            res.status(500).send(error.message);
-        }
+        next(error);
     }
 }
 
