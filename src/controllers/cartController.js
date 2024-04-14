@@ -5,7 +5,10 @@ const { CustomError } = require('../utils/error');
 async function handleAddToCart(req, res, next) {
     try {
         const { userId, productId } = req.body;
-        const productDetails = await productService.fetchProductDetails(productId);
+        // const productDetails = await productService.fetchProductDetails(productId);
+        
+        // for testing purpose, we can use this by getting dummy products.
+        const productDetails = await productService.getProductDetails(productId);
 
         if (!productDetails) {
             throw new CustomError('Product not found', 404, false)

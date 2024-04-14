@@ -21,4 +21,31 @@ async function fetchProductDetails(productId) {
   }
 }
 
-module.exports = { fetchProductDetails };
+// adding this function for testing purpose
+
+async function getProductDetails(productId) {
+  const products = {
+      'product-id-1': {
+          productId: 'product-id-1',
+          name: 'Product One',
+          price: 10.00,
+          quantity: 1
+      },
+      'product-id-2': {
+          productId: 'product-id-2',
+          name: 'Product Two',
+          price: 20.00,
+          quantity: 1
+      }
+  };
+
+  // Check if the product exists in the dummy data
+  if (products[productId]) {
+      return products[productId];
+  } else {
+      // Throw an error if no product matches the provided ID
+      throw new CustomError(`Product not found for ID: ${productId}`, 404, false);
+  }
+}
+
+module.exports = { fetchProductDetails, getProductDetails };
