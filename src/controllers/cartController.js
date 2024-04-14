@@ -58,7 +58,19 @@ async function handleGetCart(req, res, next) {
     }
 }
 
+async function handleDeleteCart(req, res, next) {
+    const { userId } = req.body;
+
+    try {
+        const result = await cartService.deleteCart(userId);
+        res.send(result);
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 
 module.exports = {
-    handleAddToCart, handleUpdateCart, handleRemoveCartItem, handleGetCart
+    handleAddToCart, handleUpdateCart, handleRemoveCartItem, handleGetCart, handleDeleteCart
 };

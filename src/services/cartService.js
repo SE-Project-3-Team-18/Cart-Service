@@ -12,7 +12,7 @@ async function addToCart(userId, productDetails) {
         if (itemIndex > -1) {
             // Update quantity and price if item exists
             cart.items[itemIndex].quantity += productDetails.quantity;
-            cart.items[itemIndex].price = productDetails.price;  // Assuming price is updated to the latest
+            cart.items[itemIndex].price = productDetails.price;
         } else {
             // Add new item to cart
             cart.items.push(productDetails);
@@ -77,6 +77,15 @@ async function getCart(userId) {
     return cart;
 }
 
+// Deletes the entire cart for a specific user
+async function deleteCart(userId) {
+    const result = await Cart.deleteOne({ userId });
+    if (result.deletedCount === 0) {
+        throw new CustomError('Cart not found', 404);
+    }
+    return { message: 'Cart deleted successfully' };
+}
+
 // Helper function to calculate the total price of the cart
 function calculateCartTotal(cart) {
     cart.total = cart.items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
@@ -86,5 +95,6 @@ module.exports = {
     addToCart,
     updateCartItem,
     removeCartItem,
-    getCart
+    getCart,
+    deleteCart
 };
