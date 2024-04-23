@@ -21,15 +21,12 @@ async function handleAddToCart(req, res, next) {
     }
 }
 
-async function handleUpdateCart(req, res, next) {
-    const { userId, productId, quantity, decrement } = req.body;
+async function handleDecrementCartItem(req, res, next) {
+    const { userId, productId} = req.body;
 
-    if (quantity < 1) {
-        throw new CustomError('Quantity must be atleast 1', 400, false);
-    }
 
     try {
-        const cart = await cartService.updateCartItem(userId, productId, quantity, decrement);
+        const cart = await cartService.decrementCartItem(userId, productId);
         res.send(cart);
     } catch (error) {
        next(error);
@@ -47,22 +44,22 @@ async function handleRemoveCartItem(req, res, next) {
     }
 }
 
-async function handleGetCart(req, res, next) {
+async function handleViewCart(req, res, next) {
     const { userId } = req.query;
 
     try {
-        const cart = await cartService.getCart(userId);
+        const cart = await cartService.viewCart(userId);
         res.send(cart);
     } catch (error) {
         next(error);
     }
 }
 
-async function handleDeleteCart(req, res, next) {
+async function handleClearCart(req, res, next) {
     const { userId } = req.body;
 
     try {
-        const result = await cartService.deleteCart(userId);
+        const result = await cartService.clearCart(userId);
         res.send(result);
     } catch (error) {
         next(error);
@@ -72,5 +69,5 @@ async function handleDeleteCart(req, res, next) {
 
 
 module.exports = {
-    handleAddToCart, handleUpdateCart, handleRemoveCartItem, handleGetCart, handleDeleteCart
+    handleAddToCart, handleDecrementCartItem, handleRemoveCartItem, handleViewCart, handleClearCart
 };

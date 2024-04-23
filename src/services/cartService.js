@@ -24,7 +24,7 @@ async function addToCart(userId, productDetails) {
     return await cart.save();
 }
 
-async function updateCartItem(userId, productId, quantity, decrement = false) {
+async function decrementCartItem(userId, productId) {
     const cart = await Cart.findOne({ userId });
     if (!cart) {
         throw new CustomError('Cart not found', 404);
@@ -35,21 +35,10 @@ async function updateCartItem(userId, productId, quantity, decrement = false) {
         throw new CustomError('Item not found in cart', 404);
     }
 
-    if (decrement) {
-        // Decrement the item quantity by the specified amount
-        cart.items[itemIndex].quantity -= quantity;
-        // Ensure the quantity does not fall below 1
+        cart.items[itemIndex].quantity -= 1;
         if (cart.items[itemIndex].quantity < 1) {
-            cart.items[itemIndex].quantity = 1;
-        }
-    } else {
-        // Directly set the quantity to the specified amount
-        cart.items[itemIndex].quantity = quantity;
-        if (quantity === 0) {
-            // Remove item if quantity is set to zero
             cart.items.splice(itemIndex, 1);
         }
-    }
 
     calculateCartTotal(cart);
     cart.modifiedOn = new Date();
@@ -69,7 +58,7 @@ async function removeCartItem(userId, productId) {
 }
 
 // Retrieves the cart for a specific user
-async function getCart(userId) {
+async function viewCart(userId) {
     const cart = await Cart.findOne({ userId });
     if (!cart) {
         throw new CustomError('Cart not found', 404, false);
@@ -78,7 +67,7 @@ async function getCart(userId) {
 }
 
 // Deletes the entire cart for a specific user
-async function deleteCart(userId) {
+async function clearCart(userId) {
     const result = await Cart.deleteOne({ userId });
     if (result.deletedCount === 0) {
         throw new CustomError('Cart not found', 404);
@@ -93,8 +82,8 @@ function calculateCartTotal(cart) {
 
 module.exports = {
     addToCart,
-    updateCartItem,
+    decrementCartItem,
     removeCartItem,
-    getCart,
-    deleteCart
+    viewCart,
+    clearCart
 };

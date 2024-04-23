@@ -5,7 +5,7 @@ const { CustomError } = require('../utils/error');
 async function fetchProductDetails(productId) {
   try {
     const ProductServiceUrl = await ServiceRegistryClient.getInstance().getUrl('Product')
-    const response = await fetch(`${ProductServiceUrl}/api/get-product`, {
+    const response = await fetch(`${ProductServiceUrl}/api/product/${productId}`, {
       method: "GET",
     });
 
