@@ -27,6 +27,26 @@ paths:
             $ref: '#/definitions/Cart'
         '404':
           description: Cart not found
+  /view/{userId}:
+    get:
+      summary: Retrieve the cart for a specific user
+      description: |
+        Retrieves the cart for the user identified by the provided user ID.
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user whose cart is being requested
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Cart data retrieved successfully
+          schema:
+            $ref: '#/definitions/Cart'
+        '404':
+          description: Cart not found
 definitions:
   CartItem:
     type: object
