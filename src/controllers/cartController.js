@@ -4,11 +4,13 @@ const { CustomError } = require('../utils/error');
 
 async function handleAddToCart(req, res, next) {
     try {
-        const { userId, productId } = req.body;
-        // const productDetails = await productService.fetchProductDetails(productId);
+
+        const userId = req.get('X-User-Id');
+        const { productId } = req.params;
+        const productDetails = await productService.fetchProductDetails(productId);
         
         // for testing purpose, we can use this by getting dummy products.
-        const productDetails = await productService.getProductDetails(productId);
+        // const productDetails = await productService.getProductDetails(productId);
 
         if (!productDetails) {
             throw new CustomError('Product not found', 404, false)
@@ -22,7 +24,8 @@ async function handleAddToCart(req, res, next) {
 }
 
 async function handleDecrementCartItem(req, res, next) {
-    const { userId, productId} = req.body;
+    const userId = req.get('X-User-Id');
+    const { productId } = req.params;
 
 
     try {
@@ -33,8 +36,10 @@ async function handleDecrementCartItem(req, res, next) {
     }
 }
 
+
 async function handleRemoveCartItem(req, res, next) {
-    const { userId, productId } = req.body;
+    const userId = req.get('X-User-Id');
+    const { productId } = req.params;
 
     try {
         const cart = await cartService.removeCartItem(userId, productId);
@@ -45,7 +50,7 @@ async function handleRemoveCartItem(req, res, next) {
 }
 
 async function handleViewCart(req, res, next) {
-    const { userId } = req.query;
+    const userId = req.get('X-User-Id');
 
     try {
         const cart = await cartService.viewCart(userId);
@@ -56,7 +61,7 @@ async function handleViewCart(req, res, next) {
 }
 
 async function handleClearCart(req, res, next) {
-    const { userId } = req.body;
+    const userId = req.get('X-User-Id');
 
     try {
         const result = await cartService.clearCart(userId);
