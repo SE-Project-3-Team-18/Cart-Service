@@ -12,7 +12,8 @@ async function handleAddToCart(req, res, next) {
       productId: productDetails._id,
       name: productDetails.name,
       price: productDetails.price,
-      quantity: productDetails.quantity,
+      quantity: 1,
+      total_quantity: productDetails.quantity
     };
     // for testing purpose, we can use this by getting dummy products.
     // const productDetails = await productService.getProductDetails(productId);
