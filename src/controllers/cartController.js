@@ -74,6 +74,16 @@ async function handleClearCart(req, res, next) {
   }
 }
 
+async function ClearCartByUserId(req, res, next) {
+  const userId = req.params.userId;
+  try {
+    const response = await cartService.clearCart(userId);
+    return res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getCartbyUserId(req,res,next){
     const userId = req.params.userId;
     try {
@@ -91,5 +101,6 @@ module.exports = {
   handleRemoveCartItem,
   handleViewCart,
   handleClearCart,
+  ClearCartByUserId,
   getCartbyUserId
 };
