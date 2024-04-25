@@ -1,6 +1,5 @@
 const Cart = require("../models/cartModel");
 const { CustomError } = require("../utils/error");
-
 // Adds an item to the cart or updates the quantity if the item already exists
 async function addToCart(userId, productDetails) {
   let cart = await Cart.findOne({ userId });
@@ -107,5 +106,5 @@ module.exports = {
   decrementCartItem,
   removeCartItem,
   viewCart,
-  clearCart,
+  clearCart
 };
